@@ -1,9 +1,11 @@
-from typing import Any, List, Type
+from typing import Any, List, Type, Generic, TypeVar
 
 from google.protobuf import descriptor_pb2, message
 
 from proto.fields import Field
 from proto.marshal import Marshal
+
+MessageType = TypeVar('MessageType', bound='Message')
 
 class MessageMeta(type):
     def __new__(mcls, name, bases, attrs): ...
@@ -23,7 +25,10 @@ class MessageMeta(type):
         including_default_value_fields: bool = ...,
         preserving_proto_field_name: bool = ...
     ) -> str: ...
-    def from_json(cls, payload, *, ignore_unknown_fields: bool = ...) -> Message: ...
+    def from_json(cls: Type[MessageType],
+                  payload,
+                  *,
+                  ignore_unknown_fields: bool = ...) -> MessageType: ...
     def to_dict(
         cls,
         instance,

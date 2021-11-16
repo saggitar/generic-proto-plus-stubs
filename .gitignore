@@ -2,7 +2,7 @@
 !*/
 !/.github/**
 !/.gitignore
-!/proto-stubs/**
+!/generic-proto-stubs/**
 !/pyproject.toml
 !/README.md
 !/LICENSE
