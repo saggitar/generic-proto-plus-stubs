@@ -1,9 +1,11 @@
-from typing import Any, NamedTuple, Set
+from typing import NamedTuple, Set
+from proto import Marshal
+
 
 class _ProtoModule(NamedTuple):
-    package: Any
-    marshal: Any
-    manifest: Any
+    package: str
+    marshal: Marshal
+    manifest: Set[str]
 
 def define_module(
     package: str, *, marshal: str = ..., manifest: Set[str] = ...
