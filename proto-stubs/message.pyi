@@ -1,11 +1,11 @@
-from typing import Any, List, Type, Generic, TypeVar
+import typing as t
 
 from google.protobuf import descriptor_pb2, message
 
 from proto.fields import Field
 from proto.marshal import Marshal
 
-MessageType = TypeVar('MessageType', bound='Message')
+MessageType = t.TypeVar('MessageType', bound='Message')
 
 class MessageMeta(type):
     def __new__(mcls, name, bases, attrs): ...
@@ -13,10 +13,15 @@ class MessageMeta(type):
     def __prepare__(mcls, name, bases, **kwargs): ...
     @property
     def meta(cls): ...
-    def pb(cls, obj: Any | None = ..., *, coerce: bool = ...) -> message.Message: ...
+
+    @t.overload
+    def pb(cls, obj: None = ..., *, coerce: bool = ...) -> t.Type[message.Message]: ...
+    @t.overload
+    def pb(cls, obj: t.Any = ..., *, coerce: bool = ...) -> message.Message: ...
+    def pb(cls, obj: t.Any | None = ..., *, coerce: bool = ...) -> message.Message: ...
     def wrap(cls, pb): ...
     def serialize(cls, instance) -> bytes: ...
-    def deserialize(cls: Type[MessageType], payload: bytes) -> MessageType: ...
+    def deserialize(cls: t.Type[MessageType], payload: bytes) -> MessageType: ...
     def to_json(
         cls,
         instance,
@@ -25,12 +30,12 @@ class MessageMeta(type):
         including_default_value_fields: bool = ...,
         preserving_proto_field_name: bool = ...
     ) -> str: ...
-    def from_json(cls: Type[MessageType],
+    def from_json(cls: t.Type[MessageType],
                   payload,
                   *,
                   ignore_unknown_fields: bool = ...) -> MessageType: ...
     def to_dict(
-        cls: Type[MessageType],
+        cls: t.Type[MessageType],
         instance,
         *,
         use_integers_for_enums: bool = ...,
@@ -40,7 +45,7 @@ class MessageMeta(type):
 
 class Message(metaclass=MessageMeta):
     def __init__(
-        self, mapping: Any | None = ..., *, ignore_unknown_fields: bool = ..., **kwargs
+        self, mapping: t.Any | None = ..., *, ignore_unknown_fields: bool = ..., **kwargs
     ) -> None: ...
     def __bool__(self): ...
     def __contains__(self, key): ...
@@ -51,19 +56,19 @@ class Message(metaclass=MessageMeta):
     def __setattr__(self, key, value): ...
 
 class _MessageInfo:
-    package: Any
-    full_name: Any
-    options: Any
-    fields: Any
-    fields_by_number: Any
-    marshal: Any
+    package: t.Any
+    full_name: t.Any
+    options: t.Any
+    fields: t.Any
+    fields_by_number: t.Any
+    marshal: t.Any
     def __init__(
         self,
-        fields: List[Field],
+        fields: t.List[Field],
         package: str,
         full_name: str,
         marshal: Marshal,
         options: descriptor_pb2.MessageOptions,
     ) -> None: ...
     @property
-    def pb(self) -> Type[message.Message]: ...
+    def pb(self) -> t.Type[message.Message]: ...
